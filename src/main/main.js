@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, Menu, protocol, screen } from 'electron';
 import { existsSync } from 'node:fs';
 import { readFile, stat } from 'node:fs/promises';
-import { dirname, extname, join, normalize, sep } from 'node:path';
+import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { listFonts } from './fonts.js';
 import { flushState, loadState, updateState } from './store.js';
@@ -30,14 +30,19 @@ if (!app.requestSingleInstanceLock()) {
 
   let win = null;
 
-  const txtArg = (argv) =>
-    argv.slice(1).reverse().find((a) => a.toLowerCase().endsWith('.txt') && existsSync(a)) ?? null;
+  // Last existing .txt argument, made absolute against the launching shell's directory.
+  const txtArg = (argv, cwd) =>
+    argv
+      .slice(1)
+      .reverse()
+      .map((a) => resolve(cwd, a))
+      .find((a) => a.toLowerCase().endsWith('.txt') && existsSync(a)) ?? null;
 
-  app.on('second-instance', (_e, argv) => {
+  app.on('second-instance', (_e, argv, workingDirectory) => {
     if (!win) return;
     if (win.isMinimized()) win.restore();
     win.focus();
-    const path = txtArg(argv);
+    const path = txtArg(argv, workingDirectory);
     if (path) win.webContents.send('open-file', path);
   });
 
@@ -48,7 +53,9 @@ if (!app.requestSingleInstanceLock()) {
       if (!full.startsWith(SRC + sep)) return new Response('Forbidden', { status: 403 });
       try {
         const body = await readFile(full);
-        return new Response(body, { headers: { 'content-type': MIME[extname(full)] ?? 'application/octet-stream' } });
+        // Local files: never serve a stale cached copy after an update.
+        const headers = { 'content-type': MIME[extname(full)] ?? 'application/octet-stream', 'cache-control': 'no-store' };
+        return new Response(body, { headers });
       } catch {
         return new Response('Not found', { status: 404 });
       }
@@ -79,7 +86,7 @@ if (!app.requestSingleInstanceLock()) {
     ipcMain.on('window:fullscreen', () => win?.setFullScreen(!win.isFullScreen()));
     ipcMain.on('window:devtools', () => win?.webContents.toggleDevTools());
 
-    const initial = txtArg(process.argv);
+    const initial = txtArg(process.argv, process.cwd());
     ipcMain.handle('app:initial-file', () => initial);
 
     Menu.setApplicationMenu(null);

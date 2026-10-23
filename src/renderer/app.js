@@ -143,7 +143,9 @@ function goTo(offset) {
 
 const baseName = (path) => path.split(/[\\/]/).pop();
 
-async function openPath(path, encodingChoice) {
+async function openPath(rawPath, encodingChoice) {
+  // One spelling per file, so positions and recents match however the path arrived.
+  const path = rawPath.replace(/\//g, '\\');
   let bytes;
   try {
     bytes = await api.readFile(path);
