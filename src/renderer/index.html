@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <title>Reader</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="stage"><canvas id="page"></canvas></main>
+
+  <header id="topbar" class="bar">
+    <button id="btn-open" title="Open (Ctrl+O)">Open</button>
+    <div class="dropdown">
+      <button id="btn-recent">Recent ▾</button>
+      <div id="recent-menu" class="menu" hidden></div>
+    </div>
+    <button id="btn-toc">Contents</button>
+    <span id="doc-title" class="doc-title"></span>
+    <button id="btn-settings">Settings</button>
+  </header>
+
+  <footer id="bottombar" class="bar">
+    <input id="progress" type="range" min="0" max="1000" value="0" aria-label="Position in book">
+    <span id="progress-label" class="progress-label"></span>
+  </footer>
+
+  <aside id="toc" class="panel left" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol id="toc-list"></ol>
+  </aside>
+
+  <aside id="settings" class="panel right" aria-label="Settings">
+    <h2>Settings</h2>
+
+    <section>
+      <h3>Theme</h3>
+      <div id="themes" class="themes"></div>
+      <div class="row"><label for="bg-color">Background</label><input id="bg-color" type="color"></div>
+      <div class="row"><label for="fg-color">Text colour</label><input id="fg-color" type="color"></div>
+    </section>
+
+    <section>
+      <h3>Text</h3>
+      <div class="row stack">
+        <label for="font-family">Font</label>
+        <select id="font-family"><option value="">Default (Georgia / Microsoft YaHei)</option></select>
+      </div>
+      <div class="row stack">
+        <label for="font-size">Size <output id="font-size-val"></output></label>
+        <input id="font-size" type="range" min="12" max="44" step="1">
+      </div>
+      <div class="row stack">
+        <label for="line-spacing">Line spacing <output id="line-spacing-val"></output></label>
+        <input id="line-spacing" type="range" min="1" max="2.6" step="0.05">
+      </div>
+      <div class="row stack">
+        <label for="para-spacing">Paragraph spacing <output id="para-spacing-val"></output></label>
+        <input id="para-spacing" type="range" min="0" max="2" step="0.1">
+      </div>
+      <div class="row stack">
+        <label for="margin">Margins <output id="margin-val"></output></label>
+        <input id="margin" type="range" min="8" max="240" step="4">
+      </div>
+    </section>
+
+    <section>
+      <h3>Page turn</h3>
+      <div class="row">
+        <label for="animation">Animation</label>
+        <select id="animation">
+          <option value="curl">Page curl</option>
+          <option value="slide">Slide</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+    </section>
+
+    <section>
+      <h3>File</h3>
+      <div class="row stack">
+        <label for="encoding">Encoding</label>
+        <select id="encoding"></select>
+      </div>
+    </section>
+
+    <button id="btn-reset" class="secondary">Reset to defaults</button>
+  </aside>
+
+  <div id="drop-hint">Drop a .txt file to open it</div>
+  <div id="toast" role="status"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
