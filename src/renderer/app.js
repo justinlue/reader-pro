@@ -321,7 +321,14 @@ function blurHidden() {
   if (el && el !== document.body && !el.closest('.panel.open, body.controls .bar')) el.blur();
 }
 
+const PEEK_EDGE = 40; // px from the top or bottom edge where the mouse reveals the bars
+const PEEK_HIDE_MS = 350;
+let peeking = false; // bars are shown only because the mouse is near an edge
+let peekTimer = 0;
+
 function setControls(show) {
+  peeking = false;
+  clearTimeout(peekTimer);
   document.body.classList.toggle('controls', show);
   if (!show) $('recent-menu').hidden = true;
   if (show) updateChrome();
@@ -446,6 +453,26 @@ function bindChrome() {
   slider.addEventListener('change', () => {
     sliderHeld = false;
     goTo(Math.min(sliderOffset(), doc.book.text.length - 1));
+  });
+}
+
+// The bars slide in while the mouse is near the top or bottom edge and slide out once
+// it leaves them. Bars opened by a centre click or Esc stay until dismissed.
+function bindPeek() {
+  document.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || e.buttons !== 0) return;
+    const nearEdge = e.clientY < PEEK_EDGE || e.clientY > window.innerHeight - PEEK_EDGE;
+    if (!controlsShown()) {
+      if (nearEdge) {
+        setControls(true);
+        peeking = true;
+      }
+      return;
+    }
+    if (!peeking) return;
+    clearTimeout(peekTimer);
+    const keep = nearEdge || e.target.closest('.bar') || panelOpen() || !$('recent-menu').hidden;
+    if (!keep) peekTimer = setTimeout(() => peeking && setControls(false), PEEK_HIDE_MS);
   });
 }
 
@@ -578,6 +605,7 @@ async function start() {
 
   bindSettings();
   bindChrome();
+  bindPeek();
   bindInput();
   syncSettingsUI();
   syncEncoding();
