@@ -1,0 +1,1239 @@
+1.1 What can we expect
+At its heart, the subject of linear algebra is about linear equations and, more specifically, sets of two or more linear equations. Google routinely deals with a set of trillions of equations each of which has trillions of unknowns. We will eventually understand how to deal with that kind of complexity. To begin, however, we will look at a more familiar situation in which there are a small number of equations and a small number of unknowns. In spite of its relative simplicity, this situation is rich enough to demonstrate some fundamental concepts that will motivate much of our exploration.
+1.1.1 Some simple examples
+1.1.2 Systems of linear equations
+Now that we have seen some simple examples, let’s agree on some terminology to help us think more precisely about sets of equations.
+First, we considered a linear equation having the form
+𝑦=2⁢𝑥−1.
+It will be convenient for us to rewrite this so that all the unknowns are on one side of the equation:
+−2⁢𝑥+𝑦=−1.
+More generally, the equation of a line can always be expressed in the form
+𝑎⁢𝑥+𝑏⁢𝑦=𝑐,
+which gives us the flexibility to describe all lines. For instance, vertical lines, such as 𝑥 =3, may be represented in this form.
+Notice that each term on the left is the product of a constant and the first power of an unknown. In the future, we will want to consider equations having many more unknowns, which we will sometimes denote as 𝑥1,𝑥2,…,𝑥𝑛. This leads to the following definition:
+Definition 1.1.13.  A linear equation in the unknowns 𝑥1,𝑥2,…,𝑥𝑛 may be written in the form
+𝑎1⁢𝑥1+𝑎2⁢𝑥2+…+𝑎𝑛⁢𝑥𝑛=𝑏,
+where 𝑎1,𝑎2,…,𝑎𝑛 are real numbers known as coefficients. We also say that 𝑥1,𝑥2,…,𝑥𝑛 are the variables in the equation.
+By a system of linear equations or a linear system, we mean a set of linear equations written in a common set of unknowns.
+For instance,
+2⁢𝑥1	+	1.2⁢𝑥2	−	4⁢𝑥3	=	3.7
+−0.1⁢𝑥1			+	𝑥3	=	2
+𝑥1	+	𝑥2	−	𝑥3	=	1.4
+ 
+is an example of a linear system.
+Definition 1.1.14.  A solution to a linear system is simply a set of numbers 𝑥1 =𝑠1,𝑥2 =𝑠2,…,𝑥𝑛 =𝑠𝑛 that satisfy all the equations in the system.
+For instance, we earlier considered the linear system
+−𝑥	+	𝑦	=	1
+−2⁢𝑥	+	𝑦	=	−1.
+ 
+To check that (𝑥,𝑦) =(2,3) is a solution, we verify that the following equations are true.
+−2	+	3	=	1
+−2⁢(2)	+	3	=	−1.
+ 
+Definition 1.1.15.  We call the set of all solutions the solution space of the linear system.
+Activity 1.1.16. Linear equations and their solutions. 
+Which of the following equations are linear? Please provide a justification for your response.
+2⁢𝑥+𝑥⁢𝑦−3⁢𝑦2=2.
+−2⁢𝑥1+3⁢𝑥2+4⁢𝑥3−𝑥5=0.
+𝑥=3⁢𝑧−4⁢𝑦.
+Consider the system of linear equations:
+𝑥	+	𝑦			=	3
+𝑦	−	𝑧	=	2
+2⁢𝑥	+	𝑦	+	𝑧	=	4.
+ 
+Is (𝑥,𝑦,𝑧) =(1,2,0) a solution?
+Is (𝑥,𝑦,𝑧) =(−2,1,0) a solution?
+Is (𝑥,𝑦,𝑧) =(0,−3,1) a solution?
+Can you find a solution in which 𝑦 =0?
+Do you think there are other solutions? Please explain your response.
+1.1.3 Summary
+The point of this section is to build some intuition about the behavior of solutions to linear systems through consideration of some simple examples. We will develop a deeper and more precise understanding of these phenomena in our future explorations.
+A linear equation is one that may be written in the form
+𝑎1⁢𝑥1+𝑎2⁢𝑥2+…+𝑎𝑛⁢𝑥𝑛=𝑏.
+A linear system is a set of linear equations and a solution is a set of values assigned to the unknowns that make each equation true.
+We came to expect that a linear system has either infinitely many solutions, exactly one solution, or no solutions.
+When we add more equations to a system, the solution space usually seems to become smaller.
+1.1.4 Exercises
+1. Give a brief explanation of your response to the following questions.
+Suppose we have a system of 500 linear equations in 10 unknowns. What would be a reasonable guess about which of the three possibilities for the set of solutions holds?
+Suppose we have a system of 10 linear equations in 500 unknowns. What would be a reasonable guess about which of the three possibilities for the set of solutions holds?
+2. Which of the following equations are linear? Please provide a justification for your response.
+2⁢𝑥+𝑥⁢𝑦−3⁢𝑦2=2.
+−2⁢𝑥1+3⁢𝑥2+4⁢𝑥3−𝑥5=0.
+𝑥=3⁢𝑧−4⁢𝑦.
+3. Consider the system of linear equations:
+𝑥	+	𝑦			=	3
+𝑦	−	𝑧	=	2
+2⁢𝑥	+	𝑦	+	𝑧	=	4.
+ 
+Is (𝑥,𝑦,𝑧) =(1,2,0) a solution?
+Is (𝑥,𝑦,𝑧) =(−2,1,0) a solution?
+Is (𝑥,𝑦,𝑧) =(0,−3,1) a solution?
+Can you find a solution in which 𝑦 =0?
+Do you think there are other solutions? Please explain your response.
+4. This exercise concerns systems of equations having three unknowns. In this case, we know that the solution space of a single equation is a plane. If it helps with visualization, consider using 3 ×5 index cards to represent planes.
+Is it possible that the solution space of a system of four equations in three unknowns is a line? Either sketch an example or give a reason why it can’t happen.
+What would you usually expect for the solution space to a system of four equations in three unknowns?
+Is it possible that there are no solutions to a system of two equations in three unknowns? Either sketch an example or give a reason why it can’t happen.
+Is it possible that there is exactly one solution to a system of two equations in three unknowns? Either sketch an example or give a reason why it can’t happen.
+1.2 Finding solutions to linear systems
+In the previous section, we looked at systems of linear equations from a graphical perspective. Since the equations had only two or three variables, we could study the solution spaces as the intersections of lines and planes.
+Because we will eventually consider systems with many equations and many variables, this graphical approach will not generally be a useful strategy. Instead, we will approach this problem algebraically and develop a technique to describe the solution spaces of general linear systems.
+1.2.1 Gaussian elimination
+We will develop an algorithm, which is usually called Gaussian elimination, that allows us to describe the solution space of a linear system. This algorithm plays a central role in much of what is to come.
+Preview Activity 1.2.1.  In this activity, we will consider some simple examples that will guide us in finding a more general approach.
+(a) Give a description of the solution space to the linear system:
+𝑥	=	2
+𝑦	=	−1.
+ 
+(b) Give a description of the solution space to the linear system:
+−𝑥	+	2⁢𝑦	−	𝑧	=	−3
+3⁢𝑦	+	𝑧	=	−1
+2⁢𝑧	=	4.
+ 
+(c) Give a description of the solution space to the linear system:
+𝑥	+	3⁢𝑦	=	−1
+2⁢𝑥	+	𝑦	=	3.
+ 
+(d) Describe the solution space to the linear equation 0⁢𝑥 =0.
+(e) Describe the solution space to the linear equation 0⁢𝑥 =5.
+These examples lead to a few observations that motivate a general approach to finding solutions of linear systems.
+Observation 1.2.2.  First, finding the solution space to some systems is simple. For example, because each equation in the following system
+𝑥	=	−4
+𝑦	=	2.
+ 
+has only one variable, it prescribes a specific value for that variable. We therefore see that there is exactly one solution, which is (𝑥,𝑦) =(−4,2). We call such a system decoupled.
+Observation 1.2.3.  Second, there is a process that can be used to find solutions to certain types of linear systems. For instance, let’s consider the system
+𝑥	+	2⁢𝑦	−	2⁢𝑧	=	−4
+−𝑦	+	𝑧	=	3
+3⁢𝑧	=	3.
+ 
+Multiplying both sides of the last equation by 1/3 gives us
+𝑥	+	2⁢𝑦	−	2⁢𝑧	=	−4
+−𝑦	+	𝑧	=	3
+𝑧	=	1.
+ 
+Any solution to this linear system must then have 𝑧 =1.
+Once we know that, we can substitute 𝑧 =1 into the first and second equations and simplify to obtain a new system of equations having the same solutions:
+𝑥	+	2⁢𝑦=		−2
+−𝑦=		2.
+ 
+The second equation, after multiplying both sides by −1, tells us that 𝑦 =−2. We can then substitute this value into the first equation to determine that 𝑥 =2.
+In this way, we arrive at a decoupled system, which shows that there is exactly one solution, namely (𝑥,𝑦,𝑧) =(2,−2,1).
+Our original system,
+𝑥	+	2⁢𝑦	−	2⁢𝑧	=	−4
+−𝑦	+	𝑧	=	3
+3⁢𝑧	=	3,
+ 
+is called a triangular system due to the shape formed by the coefficients. As this example demonstrates, triangular systems are easily solved by this process, which is called back substitution.
+Observation 1.2.4.  We can use substitution in a more general way to solve linear systems. For example, a natural approach to the system
+𝑥	+	2⁢𝑦	=	1
+2⁢𝑥	+	3⁢𝑦	=	3.
+ 
+is to use the first equation to express 𝑥 in terms of 𝑦:
+𝑥=1−2⁢𝑦
+and then substitute this into the second equation and simplify:
+2⁢𝑥+3⁢𝑦	=	3
+2⁢(1−2⁢𝑦)+3⁢𝑦	=	3
+2−4⁢𝑦+3⁢𝑦	=	3
+−𝑦	=	1
+𝑦	=	−1
+ 
+From here, we can substitute 𝑦 =−1 into the first equation to arrive at the solution (𝑥,𝑦) =(3,−1).
+However, the two-step process of solving for 𝑥 in terms of 𝑦 and substituting into the second equation may be performed more efficiently by adding a multiple of the first equation to the second. In this case, we will multiply the first equation by -2 and add to the second equation
+−2⁢(equation 1)
++	equation 2
+ 
+to obtain
+−2⁢(𝑥+2⁢𝑦=1)
++	2⁢𝑥+3⁢𝑦=3
+ 
+which gives us
+−2⁢𝑥−4⁢𝑦	=	−2
++	2⁢𝑥+3⁢𝑦	=	3
+−𝑦	=	1.
+ 
+In this way, the system
+𝑥	+	2⁢𝑦	=	1
+2⁢𝑥	+	3⁢𝑦	=	3
+ 
+is transformed into the new triangular system
+𝑥	+	2⁢𝑦	=	1
+−𝑦	=	1.
+ 
+Notice that this process can be reversed. Beginning with the triangular system, we can recover the original system by multiplying the first equation by 2 and adding it to the second. Because of this, the two systems have the same solution space. We will revisit this point later and give what may be a more convincing explanation.
+Of course, the choice to multiply the first equation by -2 was made so that the terms involving 𝑥 in the two equations will cancel leading to a triangular system that can be solved using back substitution.
+Based on these observations, we take note of three operations that transform a system of linear equations into a new system of equations having the same solution space. Our goal is to create a new system whose solution space is the same as the original system’s and may be easily described.
+Scaling
+We can multiply one equation by a nonzero number. For instance,
+2⁢𝑥−4⁢𝑦=6
+has the same set of solutions as
+1
+2
+ 
+⁢(2⁢𝑥−4⁢𝑦=6)
+or
+𝑥−2⁢𝑦=3.
+Interchange
+Interchanging equations will not change the set of solutions. For instance,
+2⁢𝑥	+	4⁢𝑦	=	1
+𝑥	−	3⁢𝑦	=	0
+ 
+has the same set of solutions as
+𝑥	−	3⁢𝑦	=	0
+2⁢𝑥	+	4⁢𝑦	=	1.
+ 
+Replacement
+As we saw above, we may multiply one equation by a real number and add it to another equation. We call this process replacement.
+Example 1.2.5.  Let’s illustrate the use of these operations to find the solution space to the system of equations:
+𝑥	+	2⁢𝑦			=	4
+2⁢𝑥	+	𝑦	−	3⁢𝑧	=	11
+−3⁢𝑥	−	2⁢𝑦	+	𝑧	=	−10
+ 
+We will first transform the system into a triangular system so we start by eliminating 𝑥 from the second and third equations.
+We begin with a replacement operation where we multiply the first equation by -2 and add the result to the second equation.
+𝑥	+	2⁢𝑦			=	4
+−3⁢𝑦	−	3⁢𝑧	=	3
+−3⁢𝑥	−	2⁢𝑦	+	𝑧	=	−10
+ 
+Another replacement operation eliminates 𝑥 from the third equation. We multiply the first equation by 3 and add to the third.
+𝑥	+	2⁢𝑦			=	4
+−3⁢𝑦	−	3⁢𝑧	=	3
+4⁢𝑦	+	𝑧	=	2
+ 
+Scale the second equation by multiplying it by −1/3.
+𝑥	+	2⁢𝑦			=	4
+𝑦	+	𝑧	=	−1
+4⁢𝑦	+	𝑧	=	2
+ 
+Eliminate 𝑦 from the third equation by multiplying the second equation by -4 and adding it to the third. Notice that we now have a triangular system that can be solved using back substitution.
+𝑥	+	2⁢𝑦			=	4
+𝑦	+	𝑧	=	−1
+−3⁢𝑧	=	6
+ 
+After scaling the third equation by −1/3, we have found the value for 𝑧.
+𝑥	+	2⁢𝑦			=	4
+𝑦	+	𝑧	=	−1
+𝑧	=	−2
+ 
+We eliminate 𝑧 from the second equation by multiplying the third equation by -1 and adding to the second.
+𝑥	+	2⁢𝑦			=	4
+𝑦			=	1
+𝑧	=	−2
+ 
+Finally, multiply the second equation by -2 and add to the first to obtain:
+𝑥	=	2
+𝑦	=	1
+𝑧	=	−2.
+ 
+Now that we have arrived at a decoupled system, we know that there is exactly one solution to our original system of equations, which is (𝑥,𝑦,𝑧) =(2,1,−2).
+One could find the same result by applying a different sequence of replacement and scaling operations. However, we chose this particular sequence guided by our desire to first transform the system into a triangular one. To do this, we eliminated the first variable 𝑥 from all but one equation and then proceeded to the next variables working left to right. Once we had a triangular system, we used back substitution moving through the variables right to left.
+We call this process Gaussian elimination and note that it is our primary tool for solving systems of linear equations.
+Activity 1.2.6. Gaussian Elimination.  For each of the following linear systems, use Gaussian elimination to describe the solutions to the following systems of linear equations. In particular, determine whether each linear system has exactly one solution, infinitely many solutions, or no solutions.
+𝑥	+	𝑦	+	2⁢𝑧	=	1
+2⁢𝑥	−	𝑦	−	2⁢𝑧	=	2
+−𝑥	+	𝑦	+	𝑧	=	0
+ 
+−𝑥	−	2⁢𝑦	+	2⁢𝑧	=	−1
+2⁢𝑥	+	4⁢𝑦	−	𝑧	=	5
+𝑥	+	2⁢𝑦			=	3
+ 
+−𝑥	−	2⁢𝑦	+	2⁢𝑧	=	−1
+2⁢𝑥	+	4⁢𝑦	−	𝑧	=	5
+𝑥	+	2⁢𝑦			=	2
+ 
+1.2.2 Augmented matrices
+After performing Gaussian elimination a few times, you probably noticed that you spent most of the time concentrating on the coefficients and simply recorded the variables as place holders. Based on this observation, we will introduce a shorthand description of linear systems.
+When writing a linear system, we always write the variables in the same order in each equation. We then construct an augmented matrix by simply forgetting about the variables and recording the numerical data in a rectangular array. For instance, the system of equations below has the following augmented matrix
+−𝑥	−	2⁢𝑦	+	2⁢𝑧	=	−1
+2⁢𝑥	+	4⁢𝑦	−	𝑧	=	5
+𝑥	+	2⁢𝑦			=	3
+ 
+⎡
+⎢
+⎢
+⎢
+⎣
+−1	−2	2	−1
+2	4	−1	5
+1	2	0	3
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+The vertical line reminds us where the equals signs appear in the equations. Entries in the matrix to the left of the vertical line correspond to coefficients of the equations. We sometimes choose to focus only on the coefficients of the system in which case we write the coefficient matrix as
+⎡
+⎢
+⎢
+⎢
+⎣
+−1	−2	2
+2	4	−1
+1	2	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+The three operations we perform on systems of equations translate naturally into operations on matrices. For instance, the replacement operation that multiplies the first equation by 2 and adds it to the second may be performed by multiplying the first row of the augmented matrix by 2 and adding it to the second row:
+⎡
+⎢
+⎢
+⎢
+⎣
+−1	−2	2	−1
+2	4	−1	5
+1	2	0	3
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+∼
+⎡
+⎢
+⎢
+⎢
+⎣
+−1	−2	2	−1
+0	0	3	3
+1	2	0	3
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+The symbol ∼ between the matrices indicates that the two matrices are related by a sequence of scaling, interchange, and replacement operations. Since these operations act on the rows of the matrices, we say that the matrices are row equivalent. Notice that the linear systems corresponding to two row equivalent augmented matrices have the same solution space.
+Activity 1.2.7. Augmented matrices and solution spaces. 
+Write the augmented matrix for the linear system
+𝑥	+	2⁢𝑦	−	𝑧	=	1
+3⁢𝑥	+	2⁢𝑦	+	2⁢𝑧	=	7
+−𝑥			+	4⁢𝑧	=	−3
+ 
+and perform Gaussian elimination to describe the solution space in as much detail as you can.
+Suppose that you have a linear system in the variables 𝑥 and 𝑦 whose augmented matrix is row equivalent to
+⎡
+⎢
+⎢
+⎢
+⎣
+1	0	3
+0	1	0
+0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+Write the linear system corresponding to this augmented matrix and describe its solution set in as much detail as you can.
+Suppose that you have a linear system in the variables 𝑥 and 𝑦 whose augmented matrix is row equivalent to
+⎡
+⎢
+⎢
+⎢
+⎣
+1	0	3
+0	1	0
+0	0	1
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+Write the linear system corresponding to this augmented matrix and describe its solution set in as much detail as you can.
+Suppose that the augmented matrix of a linear system has the following shape where ∗ could be any real number.
+⎡
+⎢
+⎢
+⎢
+⎣
+∗	∗	∗	∗	∗	∗
+∗	∗	∗	∗	∗	∗
+∗	∗	∗	∗	∗	∗
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+How many equations are there in this system and how many variables?
+Based on our earlier discussion in Section 1.1, do you think it’s possible that this system has exactly one solution, infinitely many solutions, or no solutions?
+Suppose that this augmented matrix is row equivalent to
+⎡
+⎢
+⎢
+⎢
+⎣
+1	2	0	0	3	2
+0	0	1	2	−1	−1
+0	0	0	0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+Make a choice for the names of the variables and write the corresponding linear system. Does the system have exactly one solution, infinitely many solutions, or no solutions?
+1.2.3 Reduced row echelon form
+There is a special class of matrices whose form makes it especially easy to describe the solution space of the corresponding linear system. As we describe the properties of this class of matrices, it may be helpful to consider an example, such as the following matrix.
+⎡
+⎢
+⎢
+⎢
+⎢
+⎢
+⎢
+⎣
+1	∗	0	∗	0	∗
+0	0	1	∗	0	∗
+0	0	0	0	1	∗
+0	0	0	0	0	0
+0	0	0	0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎥
+⎥
+⎦
+.
+Definition 1.2.8.  We say that a matrix is in reduced row echelon form if the following properties are satisfied.
+If the entries in a row are all zero, then the same is true of any row below it.
+If we move across a row from left to right, the first nonzero entry we encounter is 1. We call this entry the leading entry in the row.
+The leading entry in any row is to the right of the leading entries in all the rows above it.
+A leading entry is the only nonzero entry in its column.
+We call a matrix in reduced row echelon form a reduced row echelon matrix.
+We have been intentionally vague about whether the matrix we are considering is an augmented matrix corresponding to a linear system or a coefficient matrix since we will consider both possibilities in the future.
+Activity 1.2.9. Identifying reduced row echelon matrices.  Consider each of the following augmented matrices. Determine if the matrix is in reduced row echelon form. If it is not, perform a sequence of scaling, interchange, and replacement operations to obtain a row equivalent matrix that is in reduced row echelon form. Then use the reduced row echelon matrix to describe the solution space.
+[ 
+2	0	4	−8
+0	1	3	2
+ ].
+⎡
+⎢
+⎢
+⎢
+⎣
+1	0	0	−1
+0	1	0	3
+0	0	1	1
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+⎡
+⎢
+⎢
+⎢
+⎣
+1	0	4	2
+0	1	3	2
+0	0	0	1
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+⎡
+⎢
+⎢
+⎢
+⎣
+0	1	3	2
+0	0	0	0
+1	0	4	2
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+⎡
+⎢
+⎢
+⎢
+⎣
+1	2	−1	2
+0	1	−2	0
+0	0	1	1
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+The examples in the previous activity indicate that there is a sequence of row operations that transforms any matrix into one in reduced row echelon form. Moreover, the conditions that define reduced row echelon matrices guarantee that this matrix is unique.
+Theorem 1.2.10.  For any given matrix, there is exactly one reduced row echelon matrix to which it is row equivalent.
+Once we have this reduced row echelon matrix, we may describe the set of solutions to the corresponding linear system with relative ease.
+Example 1.2.11. Describing the solution space from a reduced row echelon matrix. 
+Consider the reduced row echelon matrix
+[ 
+1	0	2	−1
+0	1	1	2
+ ]
+and its corresponding linear system as
+𝑥			+	2⁢𝑧	=	−1
+𝑦	+	𝑧	=	2.
+ 
+Let’s rewrite the equations as
+𝑥	=	−1−2⁢𝑧
+𝑦	=	2−𝑧.
+ 
+From this description, it is clear that we obtain a solution for any value of the variable 𝑧. For instance, if 𝑧 =2, then 𝑥 =−5 and 𝑦 =0 so that (𝑥,𝑦,𝑧) =(−5,0,2) is a solution. Similarly, if 𝑧 =0, we see that (𝑥,𝑦,𝑧) =(−1,2,0) is also a solution.
+Because there is no restriction on the value of 𝑧, we call it a free variable, and note that the linear system has infinitely many solutions. The variables 𝑥 and 𝑦 are called basic variables as they are determined once we make a choice of the free variable.
+We will call this description of the solution space, in which the basic variables are written in terms of the free variables, a parametric description of the solution space.
+Consider the matrix
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+1	0	0	4
+0	1	0	−3
+0	0	1	1
+0	0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+.
+The last equation gives
+0⁢𝑥+0⁢𝑦+0⁢𝑧=0,
+which is true for any (𝑥,𝑦,𝑧). We may safely ignore this equation since it does not impose a restriction on (𝑥,𝑦,𝑧). We then see that there is a unique solution (𝑥,𝑦,𝑧) =(4,−3,1).
+Consider the matrix
+⎡
+⎢
+⎢
+⎢
+⎣
+1	0	2	0
+0	1	−1	0
+0	0	0	1
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+.
+Beginning with the last equation, we see that
+0⁢𝑥+0⁢𝑦+0⁢𝑧=0=1,
+which is not true for any (𝑥,𝑦,𝑧). There is no solution to this particular equation and therefore no solution to the system of equations.
+1.2.4 Summary
+We saw several important concepts in this section.
+We can describe the solution space to a linear system by transforming it into a new linear system having the same solution space through a sequence of scaling, interchange, and replacement operations.
+We can represent a linear system by an augmented matrix. Using scaling, interchange, and replacement operations, the augmented matrix is row equivalent to exactly one reduced row echelon matrix. The process of constructing this reduced row echelon matrix is called Gaussian elimination.
+The reduced row echelon matrix allows us to easily describe the solution space of a linear system.
+1.2.5 Exercises
+1. For each of the linear systems below, write the associated augmented matrix and find the reduced row echelon matrix that is row equivalent to it. Identify the basic and free variables and then describe the solution space of the original linear system using a parametric description, if appropriate.
+2⁢𝑥	+	𝑦	=	0
+𝑥	+	2⁢𝑦	=	3
+−2⁢𝑥	+	2⁢𝑦	=	6
+ 
+−𝑥1	+	2⁢𝑥2			+	𝑥3	=	2
+3⁢𝑥1					+	2⁢𝑥3	=	−1
+−𝑥1	−	𝑥2			+	𝑥3	=	2
+ 
+𝑥1	+	2⁢𝑥2	−	5⁢𝑥3	−	𝑥4	=	−3
+−2⁢𝑥1	−	2⁢𝑥2	+	6⁢𝑥3	−	2⁢𝑥4	=	4
+𝑥1			−	𝑥3	+	9⁢𝑥4	=	−7
+−𝑥2	+	2⁢𝑥3	−	𝑥4	=	4
+ 
+2. Consider each matrix below and determine if it is in reduced row echelon form. If not, indicate the reason and apply a sequence of row operations to find its reduced row echelon matrix. For each matrix, indicate whether the corresponding linear system has infinitely many solutions, exactly one solution, or no solutions.
+⎡
+⎢
+⎢
+⎢
+⎣
+1	1	0	3	3
+0	1	0	−2	1
+0	0	1	3	4
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+⎡
+⎢
+⎢
+⎢
+⎢
+⎢
+⎢
+⎣
+1	0	0	0	0
+0	2	0	0	0
+0	0	−3	0	0
+0	0	0	1	0
+0	0	0	0	1
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎥
+⎥
+⎦
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+1	0	0	3	3
+0	1	0	−2	1
+0	0	1	3	4
+0	0	0	3	3
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+⎡
+⎢
+⎢
+⎢
+⎣
+0	0	1	0	−1
+0	1	0	0	3
+1	1	1	1	2
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+3. Give an example of a reduced row echelon matrix that describes a linear system having the stated properties. If it is not possible to find such an example, explain why not.
+Write a reduced row echelon matrix for a linear system having five equations and three variables and having exactly one solution.
+Write a reduced row echelon matrix for a linear system having three equations and three variables and having no solution.
+Write a reduced row echelon matrix for a linear system having three equations and five variables and having infinitely many solutions.
+Write a reduced row echelon matrix for a linear system having three equations and four variables and having exactly one solution.
+Write a reduced row echelon matrix for a linear system having four equations and four variables and having exactly one solution.
+4. For any given matrix, Theorem 1.2.10 tells us that there is a reduced row echelon matrix that is row equivalent to it. This exercise demonstrates why this is the case. Each of the following matrices satisfies three of the four conditions required of a reduced row echelon matrix as prescribed by Definition 1.2.8. For each, indicate how a sequence of row operations can be applied to form a row equivalent reduced row echelon matrix.
+⎡
+⎢
+⎢
+⎣
+1	0	2	3
+0	0	0	0
+0	1	−2	1
+ 
+⎤
+⎥
+⎥
+⎦
+⎡
+⎢
+⎢
+⎣
+1	0	0	2
+0	−2	0	−4
+0	0	1	1
+ 
+⎤
+⎥
+⎥
+⎦
+⎡
+⎢
+⎢
+⎢
+⎢
+⎢
+⎣
+0	1	0	−2
+0	0	1	4
+1	0	0	3
+0	0	0	0
+0	0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎥
+⎦
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+1	0	2	3
+0	1	3	0
+0	0	1	−1
+0	0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+5. For each of the questions below, provide a justification for your response.
+What does the presence of a row whose entries are all zero in an augmented matrix tell us about the solution space of the linear system?
+How can you determine if a linear system has no solutions directly from its reduced row echelon matrix?
+How can you determine if a linear system has infinitely many solutions directly from its reduced row echelon matrix?
+What can you say about the solution space of a linear system if there are more variables than equations and at least one solution exists?
+6. Determine whether the following statements are true or false and explain your reasoning.
+If every variable is basic, then the linear system has exactly one solution.
+If two augmented matrices are row equivalent to one another, then they describe two linear systems having the same solution spaces.
+The presence of a free variable indicates that there are no solutions to the linear system.
+If a linear system has exactly one solution, then it must have the same number of equations as variables.
+If a linear system has the same number of equations as variables, then it has exactly one solution.
+1.3 Computation with Sage
+Linear algebra owes its prominence as a powerful scientific tool to the ever-growing power of computers. Carl Cowen, a former president of the Mathematical Association of America, has said, “No serious application of linear algebra happens without a computer.” Indeed, Cowen notes that, in the 1950s, working with a system of 100 equations in 100 variables was difficult. Today, scientists and mathematicians routinely work on problems that are vastly larger. This is only possible because of today’s computing power.
+It is therefore important for any student of linear algebra to become comfortable solving linear algebraic problems on a computer. This section will introduce you to a program called Sage that can help. While you may be able to do much of this work on a graphing calculator, you are encouraged to become comfortable with Sage as we will use increasingly powerful features as we encounter their need.
+1.3.1 Introduction to Sage
+There are several ways to access Sage.
+If you are reading this book online, there will be embedded “Sage cells” at appropriate places in the text. You have the opportunity to type Sage commands into these cells and execute them, provided you are connected to the Internet. Please be aware that your work will be lost if you reload the page.
+Here is a Sage cell containing a command that asks Sage to multiply 5 and 3. You may execute the command by pressing the Evaluate button.
+
+
+1
+5 * 3
+You may also go to cocalc.com, sign up for an account, open a new project, and create a “Sage worksheet.” Once inside the worksheet, you may enter commands as shown here, and evaluate them by pressing Enter on your keyboard while holding down the Shift key.
+There is a page of Sage cells at gsvu.edu/s/0Ng. Any results obtained by evaluating one cell are available in other cells. However, your work will be lost when the page is reloaded.
+Throughout the text, we will introduce new Sage commands that allow us to explore linear algebraic concepts. These commands are collected and summarized in the reference found in Appendix A.
+Activity 1.3.1. Basic Sage commands. 
+Sage uses the standard operators +, -, *, /, and ^ for the usual arithmetic operations. By entering text in the cell below, ask Sage to evaluate
+3+4⁢(24−1).
+
+
+1
+​
+Notice that we can create new lines by pressing Enter and entering additional commands on them. What happens when you evaluate this Sage cell?
+
+
+1
+5 * 3
+2
+10 - 4
+Notice that we only see the result from the last command. With the print command, we may see earlier results, if we wish.
+
+
+1
+print(5 * 3)
+2
+print(10 - 4)
+We may give a name to the result of one command and refer to it in a later command.
+
+
+1
+income = 1500 * 12
+2
+taxes = income * 0.15
+3
+print(taxes)
+Suppose you have three tests in your linear algebra class and your scores are 90, 100, and 98. In the Sage cell below, add your scores together and call the result total. On the next line, find the average of your test scores and print it.
+
+
+1
+​
+If you are not a programmer, you may ignore this part. If you are an experienced programmer, however, you should know that Sage is written in the Python programming language and that you may enter Python code into a Sage cell.
+
+
+1
+for i in range(10):
+2
+    print(i)
+1.3.2 Sage and matrices
+When we encounter a matrix, Theorem 1.2.10 tells us that there is exactly one reduced row echelon matrix that is row equivalent to it.
+In fact, the uniqueness of this reduced row echelon matrix is what motivates us to define this particular form. When solving a system of linear equations using Gaussian elimination, there are other row equivalent matrices that reveal the structure of the solution space. The reduced row echelon matrix is simply a convenience as it is an agreement we make with one another to seek the same matrix.
+An added benefit is that we can ask a computer program, like Sage, to find reduced row echelon matrices for us. We will learn how to do this now that we have a little familiarity with Sage.
+First, notice that a matrix has a certain number of rows and columns. For instance, the matrix
+⎡
+⎢
+⎢
+⎢
+⎣
+∗	∗	∗	∗	∗
+∗	∗	∗	∗	∗
+∗	∗	∗	∗	∗
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+has three rows and five columns. We consequently refer to this as a 3 ×5 matrix.
+We may ask Sage to create the 2 ×4 matrix
+[ 
+−1	0	2	7
+2	1	−3	−1
+ ]
+by entering
+
+
+1
+matrix(2, 4, [-1, 0, 2, 7, 2, 1, -3, -1])
+When evaluated, Sage will confirm the matrix by writing out the rows of the matrix, each inside square brackets.
+Notice that there are three separate things (we call them arguments) inside the parentheses: the number of rows, the number of columns, and the entries of the matrix listed by row inside square brackets. These three arguments are separated by commas. Notice that there is no way of specifying whether this is an augmented or coefficient matrix so it will be up to us to interpret our results appropriately.
+Sage syntax.
+Some common mistakes are
+to forget the square brackets around the list of entries,
+to omit an entry from the list or to add an extra one,
+to forget to separate the rows, columns, and entries by commas, and
+to omit the parentheses around the arguments after matrix.
+If you see an error message, carefully proofread your input and try again.
+Alternatively, you can create a matrix by simply listing its rows, like this
+matrix([ [-1, 0, 2, 7],	
+	 [ 2, 1,-3,-1] ])
+      
+content_copy
+Activity 1.3.2. Using Sage to find row reduced echelon matrices. 
+Enter the following matrix into Sage.
+⎡
+⎢
+⎢
+⎢
+⎣
+−1	−2	2	−1
+2	4	−1	5
+1	2	0	3
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+
+
+1
+​
+Give the matrix the name 𝐴 by entering
+A = matrix( ..., ..., [ ... ])
+	      
+content_copy
+We may then find its reduced row echelon form by entering
+A = matrix( ..., ..., [ ... ])
+A.rref()
+	      
+content_copy
+A common mistake is to forget the parentheses after rref.
+Use Sage to find the reduced row echelon form of the matrix from Item a of this activity.
+
+
+1
+​
+Use Sage to describe the solution space of the system of linear equations
+−𝑥1					+	2⁢𝑥4	=	4
+3⁢𝑥2	+	𝑥3	+	2⁢𝑥4	=	3
+4⁢𝑥1	−	3⁢𝑥2			+	𝑥4	=	14
+2⁢𝑥2	+	2⁢𝑥3	+	𝑥4	=	1
+ 
+
+
+1
+​
+Consider the two matrices:
+𝐴	=	
+⎡
+⎢
+⎢
+⎢
+⎣
+1	−2	1	−3
+−2	4	1	1
+−4	8	−1	7
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+𝐵	=	
+⎡
+⎢
+⎢
+⎢
+⎣
+1	−2	1	−3	0	3
+−2	4	1	1	1	−1
+−4	8	−1	7	3	2
+ 
+⎤
+⎥
+⎥
+⎥
+⎦
+ 
+We say that 𝐵 is an augmentation of 𝐴 because it is obtained from 𝐴 by adding some more columns.
+Using Sage, define the matrices and compare their reduced row echelon forms. What do you notice about the relationship between the two reduced row echelon forms?
+
+
+1
+​
+Using the system of equations in Item c, write the augmented matrix corresponding to the system of equations. What did you find for the reduced row echelon form of the augmented matrix?
+Now write the coefficient matrix of this system of equations. What does Item d of this activity tell you about its reduced row echelon form?
+Sage practices.
+Here are some practices that you may find helpful when working with matrices in Sage.
+Break the matrix entries across lines, one for each row, for better readability by pressing Enter between rows.
+A = matrix(2, 4, [ 1, 2, -1, 0,
+                  -3, 0,  4, 3 ])
+	
+content_copy
+Print your original matrix to check that you have entered it correctly. You may want to also print a dividing line to separate matrices.
+A = matrix(2, 2, [ 1, 2,
+                   2, 2])
+print (A)
+print ("---------")
+A.rref()
+	
+content_copy
+The last part of the previous activity, Item d, demonstrates something that will be helpful for us in the future. In that activity, we started with a matrix 𝐴, which we augmented by adding some columns to obtain a matrix 𝐵. We then noticed that the reduced row echelon form of 𝐵 is itself an augmentation of the reduced row echelon form of 𝐴.
+To illustrate, we can consider the reduced row echelon form of the augmented matrix:
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+−2	3	0	2
+−1	4	1	3
+3	0	2	2
+1	5	3	7
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+∼
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+1	0	0	−4
+0	1	0	−2
+0	0	1	7
+0	0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+We can then determine the reduced row echelon form of the coefficient matrix by looking inside the augmented matrix.
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+−2	3	0
+−1	4	1
+3	0	2
+1	5	3
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+∼
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+1	0	0
+0	1	0
+0	0	1
+0	0	0
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+If we trace through the steps in the Gaussian elimination algorithm carefully, we see that this is a general principle, which we now state.
+Proposition 1.3.3. Augmentation Principle.  If matrix 𝐵 is an augmentation of matrix 𝐴, then the reduced row echelon form of 𝐵 is an augmentation of the reduced row echelon form of 𝐴.
+1.3.3 Computational effort
+At the beginning of this section, we indicated that linear algebra has become more prominent as computers have grown more powerful. Computers, however, still have limits. Let’s consider how much effort is expended when we ask to find the reduced row echelon form of a matrix. We will measure, very roughly, the effort by the number of times the algorithm requires us to multiply or add two numbers.
+We will assume that our matrix has the same number of rows as columns, which we call 𝑛. We are mainly interested in the case when 𝑛 is very large, which is when we need to worry about how much effort is required.
+Let’s first consider the effort required for each of our row operations.
+Scaling a row multiplies each of the 𝑛 entries in a row by some number, which requires 𝑛 operations.
+Interchanging two rows requires no multiplications or additions so we won’t worry about the effort required by an interchange.
+A replacement requires us to multiply each entry in a row by some number, which takes 𝑛 operations, and then add the resulting entries to another row, which requires another 𝑛 operations. The total number of operations is 2⁢𝑛.
+Our goal is to transform a matrix to its reduced row echelon form, which looks something like this:
+⎡
+⎢
+⎢
+⎢
+⎢
+⎣
+1	0	…	0
+0	1	…	0
+⋮	⋮	⋱	0
+0	0	…	1
+ 
+⎤
+⎥
+⎥
+⎥
+⎥
+⎦
+.
+We roughly perform one replacement operation for every 0 entry in the reduced row echelon matrix. When 𝑛 is very large, most of the 𝑛2 entries in the reduced row echelon form are 0 so we need roughly 𝑛2 replacements. Since each replacement operation requires 2⁢𝑛 operations, the number of operations resulting from the needed replacements is roughly 𝑛2⁡(2⁢𝑛) =2⁢𝑛3.
+Each row is scaled roughly one time so there are roughly 𝑛 scaling operations, each of which requires 𝑛 operations. The number of operations due to scaling is roughly 𝑛2.
+Therefore, the total number of operations is roughly
+2⁢𝑛3+𝑛2.
+When 𝑛 is very large, the 𝑛2 term is much smaller than the 𝑛3 term. We therefore state that
+Observation 1.3.4.  The number of operations required to find the reduced row echelon form of an 𝑛 ×𝑛 matrix is roughly proportional to 𝑛3.
+This is a very rough measure of the effort required to find the reduced row echelon form; a more careful accounting shows that the number of arithmetic operations is roughly 
+2
+3
+ 
+⁢𝑛3. As we have seen, some matrices require more effort than others, but the upshot of this observation is that the effort is proportional to 𝑛3. We can think of this in the following way: If the size of the matrix grows by a factor of 10, then the effort required grows by a factor of 103 =1000.
+While today’s computers are powerful, they cannot handle every problem we might ask of them. Eventually, we would like to be able to consider matrices that have 𝑛 =1012 (a trillion) rows and columns. In very broad terms, the effort required to find the reduced row echelon matrix will require roughly (1012)3 =1036 operations.
+To put this into context, imagine we need to solve a linear system with a trillion equations and a trillion variables and that we have a computer that can perform a trillion, 1012, operations every second. Finding the reduced row echelon form would take about 1016 years. At this time, the universe is estimated to be approximately 1010 years old. If we started the calculation when the universe was born, we’d be about one-millionth of the way through.
+This may seem like an absurd situation, but we’ll see in Subsection 4.5.4 how we use the results of such a computation every day. Clearly, we will need some better tools to deal with really big problems like this one.
+1.3.4 Summary
+We learned some basic features of Sage with an emphasis on finding the reduced row echelon form of a matrix.
+Sage can perform basic arithmetic using standard operators. Sage can also save results from one command to be reused in a later command.
+We may define matrices in Sage and find the reduced row echelon form using the rref command.
+We saw an example of the Augmentation Principle, which we then stated as a general principle.
+We saw that the computational effort required to find the reduced row echelon form of an 𝑛 ×𝑛 matrix is proportional to 𝑛3.
+Appendix A contains a reference outlining the Sage commands that we have encountered.
+1.3.5 Exercises
+1. Consider the linear system
+𝑥	+	2⁢𝑦	−	𝑧	=	1
+3⁢𝑥	+	2⁢𝑦	+	2⁢𝑧	=	7
+−𝑥			+	4⁢𝑧	=	−3
+ 
+Write this system as an augmented matrix and use Sage to find a description of the solution space.
+
+
+1
+​
+2. Shown below are some traffic patterns in the downtown area of a large city. The figures give the number of cars per hour traveling along each road. Any car that drives into an intersection must also leave the intersection. This means that the number of cars entering an intersection in an hour is equal to the number of cars leaving the intersection.
+Let’s begin with the following traffic pattern.
+How many cars per hour enter the upper left intersection? How many cars per hour leave this intersection? Use this to form a linear equation in the variables 𝑥, 𝑦, 𝑧, and 𝑤.
+100
+260
+250
+390
+Diagram Exploration Keyboard Controls
+
+Figure 1.3.5. A set of intersecting streets along with a measure of the rate of traffic flow on each street.
+Form three more linear equations from the other three intersections to form a linear system having four equations in four variables. Then use Sage to find the solution space to this system.
+
+
+1
+​
+Is there exactly one solution or infinitely many solutions? Explain why you would expect this given the information provided.
+Another traffic pattern is shown below.
+650
+580
+150
+220
+Diagram Exploration Keyboard Controls
+
+Figure 1.3.6. Another set of intersecting streets along with a measure of the rate of traffic flow on each street.
+Once again, write a linear system for the quantities 𝑥, 𝑦, 𝑧, and 𝑤 and solve the system using the Sage cell below.
+
+
+1
+​
+What can you say about the solution of this linear system? Is there exactly one solution or infinitely many solutions? Explain why you would expect this given the information provided.
+What is the smallest possible amount of traffic flowing through 𝑥?
+3. A typical problem in thermodynamics is to find the steady-state temperature distribution inside a thin plate if we know the temperature around the boundary. Let 𝑇1,𝑇2,…,𝑇6 be the temperatures at the six nodes inside the plate as shown below.
+Diagram Exploration Keyboard Controls
+
+Figure 1.3.7. The temperature distribution of a thin plate.
+The temperature at a node is approximately the average of the four nearest nodes: for instance,
+𝑇1=(10+15+𝑇2+𝑇4)/4,
+which we may rewrite as
+4⁢𝑇1−𝑇2−𝑇4=25.
+Set up a linear system to find the temperature at these six points inside the plate. Then use Sage to solve the linear system. If all the entries of the matrix are integers, Sage will compute the reduced row echelon form using rational numbers. To view a decimal approximation of the results, you may use
+A.rref().numerical_approx(digits=4)
+      
+content_copy
+
+
+1
+​
+In the real world, the approximation becomes better as we add more and more points into the grid. This is a situation where we may want to solve a linear system having millions of equations and millions of variables.
+4. The fuel inside model rocket motors is a black powder mixture that ideally consists of 60% charcoal, 30% potassium nitrate, and 10% sulfur by weight.
+Suppose you work at a company that makes model rocket motors. When you come into work one morning, you learn that yesterday’s first shift made a perfect batch of fuel. The second shift, however, misread the recipe and used 50% charcoal, 20% potassium nitrate and 30% sulfur. Then the two batches were mixed together. A chemical analysis shows that there are 100.3 pounds of charcoal in the mixture and 46.9 pounds of potassium nitrate.
+Assuming the first shift produced 𝑥 pounds of fuel and the second 𝑦 pounds, set up a linear system in terms of 𝑥 and 𝑦. How many pounds of fuel did the first shift produce and how many did the second shift produce?
+
+
+1
+​
+How much sulfur would you expect to find in the mixture?
+5. This exercise is about balancing chemical reactions.
+Chemists denote a molecule of water as H2O, which means it is composed of two atoms of hydrogen (H) and one atom of oxygen (O). The process by which hydrogen burns is described by the chemical reaction
+𝑥H2+𝑦O2→𝑧H2O
+This means that 𝑥 molecules of hydrogen H2 combine with 𝑦 molecules of oxygen O2 to produce 𝑧 water molecules. The number of hydrogen atoms is the same before and after the reaction; the same is true of the oxygen atoms.
+In terms of 𝑥, 𝑦, and 𝑧, how many hydrogen atoms are there before the reaction? How many hydrogen atoms are there after the reaction? Find a linear equation in 𝑥, 𝑦, and 𝑧 by equating these quantities.
+Find a second linear equation in 𝑥, 𝑦, and 𝑧 by equating the number of oxygen atoms before and after the reaction.
+Find the solutions of this linear system. Why are there infinitely many solutions?
+
+
+1
+​
+In this chemical setting, 𝑥, 𝑦, and 𝑧 should be positive integers. Find the solution where 𝑥, 𝑦, and 𝑧 are the smallest possible positive integers.
+Now consider the reaction where potassium permanganate and manganese sulfate combine with water to produce manganese dioxide, potassium sulfate, and sulfuric acid:
+𝑥1KMnO4+𝑥2MnSO4+𝑥3H2⁢O→𝑥4MnO2+𝑥5K2SO4+𝑥6H2SO4.
+As in the previous exercise, find the appropriate values for 𝑥1,𝑥2,…,𝑥6 to balance the chemical reaction.
+
+
+1
+​
+6. We began this section by stating that increasing computational power has helped linear algebra assume a prominent role as a scientific tool. Later, we looked at one computational limitation: once a matrix gets to be too big, it is not reasonable to apply Gaussian elimination to find its reduced row echelon form.
+In this exercise, we will see another limitation: computer arithmetic with real numbers is only an approximation because computers represent real numbers with only a finite number of bits. For instance, the number pi
+𝜋=3.141592653589793238462643383279502884197169399…
+would be approximated inside a computer by, say,
+𝜋≈3.141592653589793
+Most of the time, this is not a problem. However, when we perform millions or even billions of arithmetic operations, the error in these approximations starts to accumulate and can lead to results that are wildly inaccurate. Here are two examples demonstrating this.
+Let’s first see an example showing that computer arithmetic really is an approximation. First, consider the linear system
+𝑥	+	
+1
+2
+ 
+⁢𝑦	+	
+1
+3
+ 
+⁢𝑧	=	1
+1
+2
+ 
+⁢𝑥	+	
+1
+3
+ 
+⁢𝑦	+	
+1
+4
+ 
+⁢𝑧	=	0
+1
+3
+ 
+⁢𝑥	+	
+1
+4
+ 
+⁢𝑦	+	
+1
+5
+ 
+⁢𝑧	=	0
+ 
+If the coefficients are entered into Sage as fractions, Sage will find the exact reduced row echelon form. Find the exact solution to this linear system.
+
+
+1
+​
+Now let’s ask Sage to compute with real numbers. We can do this by representing one of the coefficients as a decimal. For instance, the same linear system can be represented as
+𝑥	+	0.5⁢𝑦	+	
+1
+3
+ 
+⁢𝑧	=	1
+1
+2
+ 
+⁢𝑥	+	
+1
+3
+ 
+⁢𝑦	+	
+1
+4
+ 
+⁢𝑧	=	0
+1
+3
+ 
+⁢𝑥	+	
+1
+4
+ 
+⁢𝑦	+	
+1
+5
+ 
+⁢𝑧	=	0
+ 
+Most computers do arithmetic using either 32 or 64 bits. To magnify the problem so that we can see it better, we will ask Sage to do arithmetic using only 10 bits as follows.
+
+
+1
+R = RealNumber
+2
+RealNumber = RealField(10)
+3
+​
+4
+# enter the matrix below
+5
+A = matrix( ..., ..., [ ... ] )
+6
+​
+7
+print (A.rref())
+8
+RealNumber = R
+What does Sage give for the solution now? Compare this to the exact solution that you found previously.
+Some types of linear systems are particularly sensitive to errors resulting from computers’ approximate arithmetic. For instance, suppose we are interested in the linear system
+𝑥	+	𝑦	=	2
+𝑥	+1.001	𝑦	=	2
+ 
+Find the solution to this linear system.
+
+
+1
+​
+Suppose now that the computer has accumulated some error in one of the entries of this system so that it incorrectly stores the system as
+𝑥	+	𝑦	=	2
+𝑥	+1.001	𝑦	=	2.001
+ 
+Find the solution to this linear system.
+
+
+1
+​
+Notice how a small error in one of the entries in the linear system leads to a solution that has a dramatically large error. Fortunately, this is an issue that has been well studied, and there are techniques that mitigate this type of behavior.
