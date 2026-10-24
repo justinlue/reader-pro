@@ -7,13 +7,21 @@
 // paginated on demand without paginating what comes before it.
 
 const CN_NUM = '0-9０-９零〇一二三四五六七八九十百千万两';
+// A section title after its number: starts capitalised (or caseless, as CJK is) and
+// does not end like a sentence (a question is fine), so "3.5 million people fled."
+// stays body text. "1.2. Title" with a dot after the number is accepted too.
+const NUMBERED_TITLE = String.raw`\.?\s+[\p{Lu}\p{Lo}](.*[^.:;,。：；，])?$`;
 
 // Ordered by level: 0 = volume/part, 1 = book/卷, 2 = chapter/回/节.
+// Decimal-numbered textbook sections map onto the same levels: "1.2 Title" is a
+// section (1), "1.2.3 Title" and deeper a subsection (2).
 const HEADING_RULES = [
   { level: 0, max: 160, re: /^(VOLUME|Volume|PART|Part)\s+([IVXLCDM]+|\d+|[A-Z][a-z]+|[A-Z]+)\b/ },
   { level: 0, max: 40, re: new RegExp(`^第[${CN_NUM}]+[部集篇](\\s|$|[:：·、.])`) },
   { level: 1, max: 160, re: /^(BOOK|Book)\s+([IVXLCDM]+|\d+|[A-Z][a-z]+|[A-Z]+)\b/ },
   { level: 1, max: 40, re: new RegExp(`^(第[${CN_NUM}]+卷|卷[${CN_NUM}]+)(\\s|$|[:：·、.])`) },
+  { level: 1, max: 80, re: new RegExp(String.raw`^\d+\.\d+${NUMBERED_TITLE}`, 'u') },
+  { level: 2, max: 80, re: new RegExp(String.raw`^\d+(\.\d+){2,}${NUMBERED_TITLE}`, 'u') },
   { level: 2, max: 160, re: /^(CHAPTER|Chapter)\s+([IVXLCDM]+|\d+|[A-Z][a-z]+|[A-Z]+)\b/ },
   { level: 2, max: 40, re: new RegExp(`^第[${CN_NUM}]+[章回节](\\s|$|[:：·、.]|[^，。！？”]*$)`) },
   { level: 2, max: 20, re: /^(序章|序言|序|楔子|引子|尾声|后记|終章|终章|番外)(\s|$|[:：·、.]|[^，。！？]{0,15}$)/ },

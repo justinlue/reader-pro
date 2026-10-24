@@ -20,6 +20,23 @@ test('heading detection, English and Chinese', () => {
   assert.equal(headingLevel('第一章的内容很长，' + '字'.repeat(50)), -1);
 });
 
+test('decimal-numbered section headings, as in textbooks', () => {
+  assert.equal(headingLevel('1.1 What can we expect'), 1);
+  assert.equal(headingLevel('1.2.3 Reduced row echelon form'), 2);
+  assert.equal(headingLevel('12.10.4 Exercises'), 2);
+  assert.equal(headingLevel('2.3.1.4 Deeper still'), 2);
+  assert.equal(headingLevel('3.2 线性方程组'), 1);
+  assert.equal(headingLevel('1. Give a brief explanation of your response.'), -1);
+  assert.equal(headingLevel('1\t2\t0\t3'), -1);
+  assert.equal(headingLevel('3.5 million people fled the city that winter.'), -1);
+  assert.equal(headingLevel('2.5 kg of flour, sifted twice'), -1);
+  assert.equal(headingLevel('1.4 Why does this work?'), 1);
+  assert.equal(headingLevel('1.1. Introduction'), 1);
+  assert.equal(headingLevel('2.3.1. Row operations'), 2);
+  assert.equal(headingLevel('2.1 Definitions:'), -1);
+  assert.equal(headingLevel('1.1' + ' Word'.repeat(20)), -1);
+});
+
 test('CJK-dominant text is recognised', () => {
   assert.equal(isMostlyCjk('第一章 他抬起头，望着窗外的雨。Hello'), true);
   assert.equal(isMostlyCjk('CHAPTER I—M. MYRIEL. In 1815, 世界'), false);
