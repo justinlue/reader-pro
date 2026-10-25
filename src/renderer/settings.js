@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS = {
   bg: THEMES.paper.bg,
   fg: THEMES.paper.fg,
   animation: 'curl', // 'curl' | 'slide' | 'none'
+  autoTurn: 0, // seconds between automatic page turns; 0 = off
 };
 
 export const UI_FONT = '"Segoe UI", "Microsoft YaHei", sans-serif';

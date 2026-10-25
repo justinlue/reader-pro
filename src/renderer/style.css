@@ -184,6 +184,13 @@ body.controls #bottombar { transform: none; opacity: 1; pointer-events: auto; }
   background: none;
   cursor: pointer;
 }
+.hint {
+  margin: 4px 0 0;
+  color: var(--ui-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.hint:empty { display: none; }
 select {
   background: #2b2c30;
   border: 1px solid var(--ui-line);

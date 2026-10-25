@@ -1,3 +1,4 @@
+import { AUTO_TURN_SPEEDS, AutoTurn, autoTurnSeconds } from '../core/autoturn.mjs';
 import { buildBook, chapterAt } from '../core/book.mjs';
 import { decodeText, ENCODINGS, ENCODING_LABELS } from '../core/encoding.mjs';
 import { Paginator } from './paginator.js';
@@ -38,6 +39,14 @@ const turner = new Turner(canvas, {
   mode: () => state.settings.animation,
   look: () => look,
   onTap,
+});
+
+// The countdown restarts on every page change, so a manual turn gets a full interval
+// on its new page. Space only pauses and resumes; the configured speed stays put.
+const autoTurn = new AutoTurn({
+  turn: () => turner.turn('next'),
+  canTurn: () => neighbor('next') !== null,
+  onChange: syncAutoTurn,
 });
 
 // ---- pages ---------------------------------------------------------------
@@ -127,6 +136,7 @@ function afterMove() {
     state.books[doc.key] = { ...state.books[doc.key], offset: anchor };
     saveSoon();
   }
+  autoTurn.restart();
   updateChrome();
 }
 
@@ -190,6 +200,7 @@ async function openPath(rawPath, encodingChoice) {
   renderRecent();
   syncEncoding();
   relayout();
+  autoTurn.restart();
   saveSoon();
 }
 
@@ -243,6 +254,15 @@ function syncSettingsUI() {
   ensureFontOption(s.fontFamily);
   $('font-family').value = s.fontFamily;
   applyLook();
+  syncAutoTurn();
+}
+
+function syncAutoTurn() {
+  $('auto-turn').value = String(autoTurn.seconds);
+  const status = $('auto-turn-status');
+  if (!autoTurn.enabled) status.textContent = '';
+  else if (autoTurn.paused) status.textContent = 'Paused — press Space to resume.';
+  else status.textContent = 'Only turns forward. Space pauses.';
 }
 
 function ensureFontOption(name) {
@@ -251,6 +271,14 @@ function ensureFontOption(name) {
 }
 
 function bindSettings() {
+  const auto = $('auto-turn');
+  auto.add(new Option('Off', '0'));
+  for (const seconds of AUTO_TURN_SPEEDS) auto.add(new Option(`${seconds} seconds`, String(seconds)));
+  auto.addEventListener('change', (e) => {
+    state.settings.autoTurn = autoTurnSeconds(e.target.value);
+    autoTurn.setSeconds(state.settings.autoTurn);
+    saveSoon();
+  });
   for (const [id, theme] of Object.entries(THEMES)) {
     const btn = document.createElement('button');
     btn.dataset.theme = id;
@@ -297,6 +325,7 @@ function bindSettings() {
   });
   $('btn-reset').addEventListener('click', () => {
     state.settings = { ...DEFAULT_SETTINGS };
+    autoTurn.setSeconds(state.settings.autoTurn);
     syncSettingsUI();
     relayout();
     saveSoon();
@@ -538,6 +567,14 @@ function bindInput() {
       return;
     }
     if (e.target.closest('input, select, textarea')) return;
+    if (e.key === ' ' && !e.shiftKey && autoTurn.enabled) {
+      e.preventDefault();
+      if (!e.repeat) {
+        const paused = autoTurn.togglePause();
+        toast(paused ? 'Auto page turn paused — press Space to resume' : 'Auto page turn resumed');
+      }
+      return;
+    }
     let dir = null;
     if (NEXT.has(e.key) || (e.key === ' ' && !e.shiftKey)) dir = 'next';
     else if (PREV.has(e.key) || (e.key === ' ' && e.shiftKey)) dir = 'prev';
@@ -600,6 +637,7 @@ async function start() {
   const saved = await api.loadState();
   Object.assign(state, saved);
   state.settings = { ...DEFAULT_SETTINGS, ...saved.settings };
+  state.settings.autoTurn = autoTurnSeconds(state.settings.autoTurn);
   state.books ??= {};
   state.recent ??= [];
 
@@ -607,6 +645,7 @@ async function start() {
   bindChrome();
   bindPeek();
   bindInput();
+  autoTurn.setSeconds(state.settings.autoTurn);
   syncSettingsUI();
   syncEncoding();
   renderToc();
@@ -631,7 +670,7 @@ async function start() {
   if (!doc) setControls(true);
 
   // Debug handle for DevTools and scripted UI checks.
-  window.__reader = { turner, paginator, goTo, state, get cur() { return cur; } };
+  window.__reader = { turner, paginator, autoTurn, goTo, state, get cur() { return cur; } };
 }
 
 start();
