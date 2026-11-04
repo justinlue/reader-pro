@@ -4,6 +4,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { listFonts } from './fonts.js';
+import { cancelSynthesis, listVoices, synthesize } from './edge-tts.js';
 import { flushState, loadState, updateState } from './store.js';
 
 const SRC = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -83,6 +84,9 @@ if (!app.requestSingleInstanceLock()) {
       return new Uint8Array(await readFile(path));
     });
     ipcMain.handle('fonts:list', () => listFonts());
+    ipcMain.handle('tts:voices', () => listVoices());
+    ipcMain.handle('tts:synthesize', (_e, request) => synthesize(request));
+    ipcMain.on('tts:cancel', (_e, id) => cancelSynthesis(id));
     ipcMain.on('window:fullscreen', () => win?.setFullScreen(!win.isFullScreen()));
     ipcMain.on('window:devtools', () => win?.webContents.toggleDevTools());
 

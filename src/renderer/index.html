@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+        content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:">
   <title>Reader</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -84,6 +84,23 @@
         <select id="auto-turn"></select>
       </div>
       <p id="auto-turn-status" class="hint" aria-live="polite"></p>
+    </section>
+
+    <section>
+      <h3>Audiobook</h3>
+      <div class="row">
+        <label for="tts-enabled">Read pages aloud</label>
+        <input id="tts-enabled" type="checkbox">
+      </div>
+      <div class="row stack">
+        <label for="tts-voice">Voice</label>
+        <select id="tts-voice"><option value="">Auto (book language)</option></select>
+      </div>
+      <div class="row">
+        <label for="tts-rate">Speed</label>
+        <select id="tts-rate"></select>
+      </div>
+      <p id="tts-status" class="hint" aria-live="polite"></p>
     </section>
 
     <section>

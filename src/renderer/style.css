@@ -175,6 +175,12 @@ body.controls #bottombar { transform: none; opacity: 1; pointer-events: auto; }
 .row label { color: var(--ui-fg); }
 .row output { color: var(--ui-muted); margin-left: 6px; }
 .row input[type="range"] { accent-color: var(--accent); width: 100%; }
+.row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
 .row input[type="color"] {
   width: 44px;
   height: 28px;

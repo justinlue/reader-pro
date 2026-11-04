@@ -1,9 +1,11 @@
 import { AUTO_TURN_SPEEDS, AutoTurn, autoTurnSeconds } from '../core/autoturn.mjs';
 import { buildBook, chapterAt } from '../core/book.mjs';
 import { decodeText, ENCODINGS, ENCODING_LABELS } from '../core/encoding.mjs';
+import { speechText } from '../core/speech.mjs';
+import { Audiobook } from './audiobook.js';
 import { Paginator } from './paginator.js';
-import { paintMessage, paintPage } from './painter.js';
-import { DEFAULT_SETTINGS, THEMES, isDark, makeMetrics, mix } from './settings.js';
+import { paintHighlight, paintMessage, paintPage } from './painter.js';
+import { DEFAULT_SETTINGS, THEMES, TTS_RATES, isDark, makeMetrics, mix, ttsRateValue } from './settings.js';
 import { Turner } from './turner.js';
 
 const api = window.api;
@@ -25,6 +27,8 @@ let colors = null;
 let look = null;
 let images = new Map();
 let clock = '';
+let highlight = null; // spoken word range in book offsets
+let overlay = null; // transparent canvas above the page image
 
 const canvas = $('page');
 const paginator = new Paginator(onPaginationUpdate);
@@ -38,6 +42,7 @@ const turner = new Turner(canvas, {
   },
   mode: () => state.settings.animation,
   look: () => look,
+  overlay: () => overlay?.canvas ?? null,
   onTap,
 });
 
@@ -45,8 +50,19 @@ const turner = new Turner(canvas, {
 // on its new page. Space only pauses and resumes; the configured speed stays put.
 const autoTurn = new AutoTurn({
   turn: () => turner.turn('next'),
-  canTurn: () => neighbor('next') !== null,
+  canTurn: () => !state.settings.ttsEnabled && neighbor('next') !== null,
   onChange: syncAutoTurn,
+});
+
+// The audiobook owns audio playback and drives highlights; the reader owns pages.
+const audiobook = new Audiobook({
+  page: speechPage,
+  nextPage: () => speechPageInfo(neighbor('next')),
+  canTurn: () => neighbor('next') !== null,
+  turn: () => turner.turn('next'),
+  highlight: setSpeechHighlight,
+  onState: renderTtsStatus,
+  onError: (message) => toast(message),
 });
 
 // ---- pages ---------------------------------------------------------------
@@ -54,6 +70,23 @@ const autoTurn = new AutoTurn({
 function neighbor(dir) {
   if (!cur) return null;
   return dir === 'next' ? paginator.next(cur) : paginator.prev(cur);
+}
+
+// Page data for the audiobook: the speakable slice and the offsets it came from.
+function speechPageInfo(pos) {
+  if (!doc || doc.empty || !pos) return null;
+  const page = paginator.page(pos);
+  if (page.end <= page.start) return null;
+  return {
+    key: `${doc.key}|${pos.seg}:${pos.idx}|${page.start}:${page.end}`,
+    text: speechText(doc.book.text, page.start, page.end),
+    start: page.start,
+    end: page.end,
+  };
+}
+
+function speechPage() {
+  return speechPageInfo(cur);
 }
 
 function newImage() {
@@ -96,8 +129,40 @@ function pageInfo(pos, page) {
   return { header, footerLeft, footerRight: `${pct}%   ${clock}` };
 }
 
+function resizeOverlay() {
+  const w = Math.max(1, Math.round(W * dpr));
+  const h = Math.max(1, Math.round(H * dpr));
+  if (!overlay) {
+    const c = new OffscreenCanvas(w, h);
+    overlay = { canvas: c, ctx: c.getContext('2d') };
+  } else if (overlay.canvas.width !== w || overlay.canvas.height !== h) {
+    overlay.canvas.width = w;
+    overlay.canvas.height = h;
+  }
+}
+
+// The highlight is painted onto its own transparent canvas, so following a word never
+// invalidates the cached page image under it.
+function paintHighlightOverlay() {
+  if (!overlay) return;
+  const ctx = overlay.ctx;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  if (!highlight || !doc || doc.empty || !cur || !metrics || !colors || !paginator.measurer) return;
+  const page = paginator.page(cur);
+  if (highlight.end <= page.start || highlight.start >= page.end) return;
+  paintHighlight(ctx, metrics, colors, page, doc.book.text, paginator.measurer.measure, highlight);
+}
+
+function setSpeechHighlight(range) {
+  highlight = range;
+  paintHighlightOverlay();
+  if (!turner.busy) turner.paint();
+}
+
 function repaint() {
   images = new Map();
+  paintHighlightOverlay();
   if (!turner.busy) turner.paint();
 }
 
@@ -115,6 +180,7 @@ function relayout() {
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
   turner.setSize(W, H, dpr);
+  resizeOverlay();
   cur = null;
   if (doc && !doc.empty) {
     metrics = makeMetrics(state.settings, W, H, doc.book.cjk);
@@ -122,6 +188,7 @@ function relayout() {
     cur = paginator.locate(anchor);
   }
   repaint();
+  audiobook.pageChanged();
   updateChrome();
 }
 
@@ -137,6 +204,7 @@ function afterMove() {
     saveSoon();
   }
   autoTurn.restart();
+  audiobook.pageChanged();
   updateChrome();
 }
 
@@ -177,6 +245,7 @@ async function openPath(rawPath, encodingChoice) {
   const decoded = decodeText(bytes, rec.encoding ?? null);
   const book = buildBook(decoded.text);
   turner.finish();
+  audiobook.suspend();
   doc = {
     path,
     key,
@@ -229,7 +298,12 @@ function saveNow() {
 
 function applyLook() {
   const s = state.settings;
-  colors = { bg: s.bg, fg: s.fg, muted: mix(s.fg, s.bg, 0.45) };
+  colors = {
+    bg: s.bg,
+    fg: s.fg,
+    muted: mix(s.fg, s.bg, 0.45),
+    highlight: isDark(s.bg) ? 'rgba(217, 165, 91, 0.34)' : 'rgba(217, 165, 91, 0.48)',
+  };
   look = { back: mix(s.bg, s.fg, 0.06), shadow: isDark(s.bg) ? 1.8 : 1 };
   document.documentElement.style.setProperty('--page-bg', s.bg);
   for (const btn of $('themes').children) btn.classList.toggle('active', btn.dataset.theme === s.theme);
@@ -255,12 +329,14 @@ function syncSettingsUI() {
   $('font-family').value = s.fontFamily;
   applyLook();
   syncAutoTurn();
+  syncTtsUI();
 }
 
 function syncAutoTurn() {
   $('auto-turn').value = String(autoTurn.seconds);
   const status = $('auto-turn-status');
   if (!autoTurn.enabled) status.textContent = '';
+  else if (state.settings.ttsEnabled) status.textContent = 'Paused while the audiobook is playing.';
   else if (autoTurn.paused) status.textContent = 'Paused — press Space to resume.';
   else status.textContent = 'Only turns forward. Space pauses.';
 }
@@ -268,6 +344,123 @@ function syncAutoTurn() {
 function ensureFontOption(name) {
   const select = $('font-family');
   if (name && ![...select.options].some((o) => o.value === name)) select.add(new Option(name, name));
+}
+
+// ---- audiobook settings --------------------------------------------------
+
+const TTS_RATE_LABELS = new Map([
+  [-25, 'Slower (-25%)'],
+  [0, 'Normal'],
+  [25, 'Faster (+25%)'],
+  [50, 'Fast (+50%)'],
+]);
+
+let voicesPromise = null;
+
+function ensureVoiceOption(name) {
+  const select = $('tts-voice');
+  if (name && ![...select.options].some((o) => o.value === name)) select.add(new Option(name, name));
+}
+
+function syncTtsUI() {
+  const s = state.settings;
+  $('tts-enabled').checked = s.ttsEnabled;
+  ensureVoiceOption(s.ttsVoice);
+  $('tts-voice').value = s.ttsVoice;
+  $('tts-rate').value = String(s.ttsRate);
+  renderTtsStatus();
+}
+
+function renderTtsStatus() {
+  const el = $('tts-status');
+  if (!state.settings.ttsEnabled) {
+    el.textContent = 'Off. Reads the current page aloud and turns it when finished.';
+    return;
+  }
+  switch (audiobook.state) {
+    case 'loading':
+      el.textContent = 'Preparing audio…';
+      break;
+    case 'playing': {
+      const n = cur && paginator.pageNumber(cur);
+      el.textContent = n ? `Reading page ${n.toLocaleString()} aloud. Space pauses.` : 'Reading aloud. Space pauses.';
+      break;
+    }
+    case 'paused':
+      el.textContent = 'Paused — press Space to resume.';
+      break;
+    case 'turning':
+      el.textContent = 'Turning the page…';
+      break;
+    case 'finished':
+      el.textContent = 'End of the book.';
+      break;
+    case 'error':
+      el.textContent = audiobook.detail ? `Could not read aloud: ${audiobook.detail}` : 'Could not read aloud.';
+      break;
+    default:
+      el.textContent = doc ? 'Waiting to read this page.' : 'Open a book to start listening.';
+  }
+}
+
+async function loadVoices() {
+  if (voicesPromise) return voicesPromise;
+  voicesPromise = api
+    .listVoices()
+    .then(fillVoices)
+    .catch(() => {
+      // Let the next Settings visit retry; Auto keeps working without the list.
+      voicesPromise = null;
+    });
+  return voicesPromise;
+}
+
+function fillVoices(voices) {
+  const current = state.settings.ttsVoice;
+  const select = $('tts-voice');
+  select.replaceChildren(new Option('Auto (book language)', ''));
+  const collator = new Intl.Collator(undefined, { sensitivity: 'base' });
+  const rank = (voice) => (voice.locale?.startsWith('en') ? 0 : voice.locale?.startsWith('zh') ? 1 : 2);
+  const sorted = [...voices].sort(
+    (a, b) =>
+      rank(a) - rank(b) ||
+      collator.compare(a.language ?? a.locale ?? '', b.language ?? b.locale ?? '') ||
+      collator.compare(a.name, b.name),
+  );
+  for (const voice of sorted) {
+    select.add(new Option(`${voice.language ?? voice.locale} — ${voice.name} (${voice.gender})`, voice.name));
+  }
+  ensureVoiceOption(current);
+  select.value = current;
+}
+
+function bindTts() {
+  const rates = $('tts-rate');
+  for (const value of TTS_RATES) rates.add(new Option(TTS_RATE_LABELS.get(value), String(value)));
+  $('tts-enabled').addEventListener('change', (e) => {
+    state.settings.ttsEnabled = e.target.checked;
+    if (e.target.checked) {
+      autoTurn.stop();
+      loadVoices();
+      audiobook.setEnabled(true);
+    } else {
+      audiobook.setEnabled(false);
+      autoTurn.restart();
+    }
+    syncAutoTurn();
+    syncTtsUI();
+    saveSoon();
+  });
+  $('tts-voice').addEventListener('change', (e) => {
+    state.settings.ttsVoice = e.target.value;
+    audiobook.setVoice(e.target.value);
+    saveSoon();
+  });
+  $('tts-rate').addEventListener('change', (e) => {
+    state.settings.ttsRate = ttsRateValue(e.target.value);
+    audiobook.setRate(state.settings.ttsRate);
+    saveSoon();
+  });
 }
 
 function bindSettings() {
@@ -325,6 +518,9 @@ function bindSettings() {
   });
   $('btn-reset').addEventListener('click', () => {
     state.settings = { ...DEFAULT_SETTINGS };
+    audiobook.setEnabled(false);
+    audiobook.setVoice('');
+    audiobook.setRate(0);
     autoTurn.setSeconds(state.settings.autoTurn);
     syncSettingsUI();
     relayout();
@@ -463,7 +659,10 @@ function updateChrome() {
 function bindChrome() {
   $('btn-open').addEventListener('click', openDialog);
   $('btn-toc').addEventListener('click', () => openPanel('toc'));
-  $('btn-settings').addEventListener('click', () => openPanel('settings'));
+  $('btn-settings').addEventListener('click', () => {
+    openPanel('settings');
+    loadVoices();
+  });
   $('btn-recent').addEventListener('click', (e) => {
     e.stopPropagation();
     $('recent-menu').hidden = !$('recent-menu').hidden;
@@ -567,6 +766,16 @@ function bindInput() {
       return;
     }
     if (e.target.closest('input, select, textarea')) return;
+    if (e.key === ' ' && !e.shiftKey && audiobook.active) {
+      e.preventDefault();
+      if (!e.repeat) {
+        const wasPaused = audiobook.state === 'paused';
+        const paused = audiobook.togglePause();
+        if (paused) toast('Audiobook paused — press Space to resume');
+        else if (wasPaused) toast('Audiobook resumed');
+      }
+      return;
+    }
     if (e.key === ' ' && !e.shiftKey && autoTurn.enabled) {
       e.preventDefault();
       if (!e.repeat) {
@@ -638,10 +847,14 @@ async function start() {
   Object.assign(state, saved);
   state.settings = { ...DEFAULT_SETTINGS, ...saved.settings };
   state.settings.autoTurn = autoTurnSeconds(state.settings.autoTurn);
+  state.settings.ttsEnabled = Boolean(state.settings.ttsEnabled);
+  state.settings.ttsVoice = typeof state.settings.ttsVoice === 'string' ? state.settings.ttsVoice : '';
+  state.settings.ttsRate = ttsRateValue(state.settings.ttsRate);
   state.books ??= {};
   state.recent ??= [];
 
   bindSettings();
+  bindTts();
   bindChrome();
   bindPeek();
   bindInput();
@@ -653,11 +866,18 @@ async function start() {
   tickClock();
   setInterval(tickClock, 5000);
 
+  audiobook.setVoice(state.settings.ttsVoice);
+  audiobook.setRate(state.settings.ttsRate);
+  audiobook.setEnabled(state.settings.ttsEnabled);
+
   new ResizeObserver(() => relayoutSoon(80)).observe($('stage'));
   relayout();
 
   api.onOpenFile((path) => openPath(path));
-  window.addEventListener('beforeunload', saveNow);
+  window.addEventListener('beforeunload', () => {
+    saveNow();
+    audiobook.setEnabled(false);
+  });
 
   api.listFonts().then((fonts) => {
     const select = $('font-family');
@@ -670,7 +890,20 @@ async function start() {
   if (!doc) setControls(true);
 
   // Debug handle for DevTools and scripted UI checks.
-  window.__reader = { turner, paginator, autoTurn, goTo, state, get cur() { return cur; } };
+  window.__reader = {
+    turner,
+    paginator,
+    autoTurn,
+    audiobook,
+    goTo,
+    state,
+    get cur() {
+      return cur;
+    },
+    get highlight() {
+      return highlight;
+    },
+  };
 }
 
 start();

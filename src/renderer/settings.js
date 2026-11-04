@@ -18,7 +18,18 @@ export const DEFAULT_SETTINGS = {
   fg: THEMES.paper.fg,
   animation: 'curl', // 'curl' | 'slide' | 'none'
   autoTurn: 0, // seconds between automatic page turns; 0 = off
+  ttsEnabled: false, // read the visible page aloud with Edge TTS
+  ttsVoice: '', // '' = pick a voice from the page's writing system
+  ttsRate: 0, // percent, from TTS_RATES
 };
+
+export const TTS_RATES = [-25, 0, 25, 50];
+
+// Saved state may hold a rate this build no longer offers; anything else is normal speed.
+export function ttsRateValue(value) {
+  const rate = Number(value);
+  return TTS_RATES.includes(rate) ? rate : 0;
+}
 
 export const UI_FONT = '"Segoe UI", "Microsoft YaHei", sans-serif';
 

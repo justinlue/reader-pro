@@ -8,7 +8,8 @@
   "main": "src/main/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "node --test \"test/*.test.mjs\""
+    "test": "node --test \"test/*.test.mjs\"",
+    "tts:check": "node scripts/tts-smoke.mjs"
   },
   "devDependencies": {
     "electron": "^44.9.3"

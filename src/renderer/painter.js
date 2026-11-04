@@ -55,3 +55,24 @@ export function paintMessage(ctx, W, H, colors, lines) {
   });
   ctx.textAlign = 'left';
 }
+
+// Draws marker rectangles for the spoken range on a transparent overlay. The overlay
+// sits above the cached page image, so a moving highlight never repaints the page.
+export function paintHighlight(ctx, m, colors, page, text, measure, range) {
+  if (!range || range.end <= range.start || !colors.highlight) return;
+  ctx.save();
+  ctx.fillStyle = colors.highlight;
+  for (const line of page.lines) {
+    if (line.end <= range.start || line.start >= range.end) continue;
+    ctx.font = line.kind === 'heading' ? m.headingFont : m.bodyFont;
+    const lh = line.kind === 'heading' ? m.headingLineHeight : m.lineHeight;
+    const y = m.padTop + line.y;
+    for (const piece of placeLine(text, line, m.width, measure)) {
+      if (piece.space || piece.end <= range.start || piece.start >= range.end) continue;
+      ctx.beginPath();
+      ctx.roundRect(m.padX + piece.x - 1, y + 1, piece.w + 2, lh - 2, 3);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+}

@@ -7,6 +7,7 @@
 //   commit(dir)   the turn finished; make that page current
 //   mode()        'curl' | 'slide' | 'none'
 //   look()        { back, shadow } colour of the page's back, shadow strength
+//   overlay()     transparent canvas drawn on the flat page (the speech highlight)
 //   onTap(zone)   'left' | 'middle' | 'right' click without a drag
 // }
 
@@ -153,8 +154,14 @@ export class Turner {
   // ---- animation ---------------------------------------------------------
 
   animate(frame, target, duration, ease, complete, lift = false) {
-    this.anim = { from: frame, target, duration, ease, complete, lift, t0: performance.now(), raf: 0 };
+    this.anim = { from: frame, target, duration, ease, complete, lift, t0: performance.now(), raf: 0, timer: 0 };
     this.frame = frame;
+    // Chromium throttles animation frames when the window is hidden or occluded. A timer
+    // guarantees the turn still commits, so an audiobook keeps advancing in the background.
+    const anim = this.anim;
+    anim.timer = setTimeout(() => {
+      if (this.anim === anim) this.end();
+    }, duration + 80);
     const step = (now) => {
       const anim = this.anim;
       if (!anim) return;
@@ -179,6 +186,7 @@ export class Turner {
     const anim = this.anim;
     if (!anim) return;
     cancelAnimationFrame(anim.raf);
+    clearTimeout(anim.timer);
     this.anim = null;
     this.frame = null;
     if (anim.complete) this.host.commit(anim.from.dir);
@@ -199,6 +207,8 @@ export class Turner {
     const cur = this.host.image('cur');
     if (!f || f.kind === 'none') {
       if (cur) ctx.drawImage(cur, 0, 0, W, H);
+      const overlay = this.host.overlay?.();
+      if (overlay) ctx.drawImage(overlay, 0, 0, W, H);
       return;
     }
     const other = this.host.image(f.dir);

@@ -179,7 +179,7 @@ export function placeLine(text, line, avail, measure) {
     const t = tokenEnd(text, i, line.end);
     const str = text.slice(i, t);
     const w = measure(str, line.kind);
-    pieces.push({ str, w, space: isSpace(text.charCodeAt(i)) });
+    pieces.push({ str, w, start: i, end: t, space: isSpace(text.charCodeAt(i)) });
     natural += w;
     i = t;
   }
