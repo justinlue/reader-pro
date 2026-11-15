@@ -1,0 +1,13 @@
+# Project timeline: key designs and changes, rendered by `pgraph render`.
+# Schema: D:/Workshop/project-graph/docs/superpowers/specs/2026-10-21-project-graph-design.md
+trunk = "main"
+
+[[nodes]]
+id = "2026-11-15-cached-audiobook-page-boundary-speech"
+date = 2026-11-15
+kind = "feature"
+title = "Cached audiobook page-boundary speech"
+summary = "Synthesizes each page remainder with the next opening and resumes the cached recording after the unchanged page turn. Audio-engine stop points prevent lookahead leaking in background windows; 71 tests passed."
+branch = "main"
+commit = "c8c50bb20225"
+docs = ["docs/superpowers/specs/2026-11-15-audiobook-boundary-design.md", "docs/superpowers/plans/2026-11-15-audiobook-boundary.md"]
