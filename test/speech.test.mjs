@@ -4,6 +4,35 @@ import { alignSpeechWords, autoVoice, speechText, splitSpeech, wordIndexAt } fro
 
 const word = (text, startMs, durationMs) => ({ text, startMs, durationMs });
 
+test('splitSpeech keeps the final sentence and lookahead together within the byte budget', () => {
+  const text = 'word '.repeat(398) + 'Ends. Next opens. ';
+  const chunks = splitSpeech(text, 2000, undefined, 1990);
+  assert.equal(text.slice(chunks.at(-1).start, chunks.at(-1).end), 'Ends. Next opens. ');
+  assert.equal(chunks.map(({ start, end }) => text.slice(start, end)).join(''), text);
+  assert.ok(chunks.every(({ start, end }) => Buffer.byteLength(text.slice(start, end)) <= 2000));
+});
+
+test('protecting a sentence pair does not split a recording that already fits', () => {
+  assert.deepEqual(splitSpeech('Body. Ends. Next opens. ', 2000, undefined, 6), [{ start: 0, end: 24 }]);
+});
+
+test('protected speech tails respect CJK and XML expansion byte costs', () => {
+  const xmlBytes = (ch) => Buffer.byteLength(ch === '&' ? '&amp;' : ch === '<' ? '&lt;' : ch);
+  const prefix = '前文。'.repeat(30);
+  const tail = '结尾<&。下一句。';
+  const text = prefix + tail;
+  const chunks = splitSpeech(text, 100, xmlBytes, prefix.length);
+  assert.equal(text.slice(chunks.at(-1).start), tail);
+  assert.equal(chunks.map(({ start, end }) => text.slice(start, end)).join(''), text);
+  for (const { start, end } of chunks) {
+    assert.ok([...text.slice(start, end)].reduce((sum, ch) => sum + xmlBytes(ch), 0) <= 100);
+  }
+  // An unavoidably oversized pair still obeys the request limit.
+  const long = splitSpeech(tail.repeat(30), 100, xmlBytes, 3);
+  assert.ok(long.every(({ start, end }) => [...tail.repeat(30).slice(start, end)]
+    .reduce((sum, ch) => sum + xmlBytes(ch), 0) <= 100));
+});
+
 test('speechText keeps offsets while removing characters the service rejects', () => {
   const text = 'one\ntwo\tthree\u0000four\u200b';
   const spoken = speechText(text);

@@ -20,7 +20,7 @@ export function speechText(text, start = 0, end = text.length) {
 // Splits text into requests no larger than maxBytes. `charBytes` lets the caller charge
 // for XML escaping; the default is raw UTF-8. Breaks prefer whitespace, falling back to
 // the last code point that fits, and the chunks always cover the whole text.
-export function splitSpeech(text, maxBytes = 3500, charBytes = utf8Bytes) {
+export function splitSpeech(text, maxBytes = 3500, charBytes = utf8Bytes, tailStart) {
   const chunks = [];
   if (!text) return chunks;
   let start = 0;
@@ -51,6 +51,15 @@ export function splitSpeech(text, maxBytes = 3500, charBytes = utf8Bytes) {
     }
   }
   if (start < text.length) chunks.push({ start, end: text.length });
+  // Move a cut out of the final sentence pair only when necessary. Oversized pairs
+  // still use bounded chunking rather than exceeding the service's SSML limit.
+  if (Number.isInteger(tailStart) && tailStart > 0 && chunks.at(-1).start > tailStart) {
+    let tailBytes = 0;
+    for (const ch of text.slice(tailStart)) tailBytes += charBytes(ch);
+    if (tailBytes <= maxBytes) {
+      return [...splitSpeech(text.slice(0, tailStart), maxBytes, charBytes), { start: tailStart, end: text.length }];
+    }
+  }
   return chunks;
 }
 

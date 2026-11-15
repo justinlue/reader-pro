@@ -36,7 +36,8 @@ layout, themes/font settings, and a Bézier page-curl turn.
 - `src/renderer/` — UI. `app.js` controller, `paginator.js` (sync + worker pagination),
   `worker.js`, `painter.js` (one page → canvas, plus the highlight overlay),
   `turner.js` (drag/animation/curl drawing), `audiobook.js` (page-by-page playback,
-  prefetch, highlight timing, and the turn when a page finishes).
+  prefetch, highlight timing, and the turn when a page finishes), `speech-audio.js`
+  (decoded speech playback with audio-engine stop points).
 
 ## Invariants worth knowing
 
@@ -54,7 +55,13 @@ layout, themes/font settings, and a Bézier page-curl turn.
   `Measurer` with the same font strings, so they agree.
 - The audiobook reads only the visible page (body and headings, not the running
   header/footer), highlights the word range reported by Edge TTS, and turns forward
-  when the audio ends. Its highlight offsets are book offsets, like page layout.
+  after the page's last timed word (audio end when timings are incomplete). Its
+  highlight offsets are book offsets, like page layout.
+- Speech recordings include the next page's first sentence when boundary timings
+  allow it. Web Audio stops at the page boundary independently of JS timers; after
+  the unchanged turn, the same recording resumes at the next opening. The prefetched
+  remainder starts after that opening. Final sentence pairs stay in one service
+  chunk when they fit its byte limit; missing timings use page-only synthesis.
 - Highlight rectangles are painted on a transparent overlay above the cached page
   image, so following a word does not repaint or invalidate the page.
 - The audiobook is off by default. Turning it on pauses auto page turning without

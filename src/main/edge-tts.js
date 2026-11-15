@@ -286,7 +286,7 @@ async function synthChunkWithRetry(options) {
 // by the decoded duration of earlier audio.
 export async function synthesizePage(request) {
   const { text, voice, rate } = validateRequest(request);
-  const chunks = splitSpeech(text, CHUNK_BYTES, xmlBytes);
+  const chunks = splitSpeech(text, CHUNK_BYTES, xmlBytes, request.tailStart);
   const controller = new AbortController();
   const signal = request.signal ? AbortSignal.any([request.signal, controller.signal]) : controller.signal;
   const results = new Array(chunks.length);

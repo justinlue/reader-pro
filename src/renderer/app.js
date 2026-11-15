@@ -57,7 +57,7 @@ const autoTurn = new AutoTurn({
 // The audiobook owns audio playback and drives highlights; the reader owns pages.
 const audiobook = new Audiobook({
   page: speechPage,
-  nextPage: () => speechPageInfo(neighbor('next')),
+  nextPage: (info) => speechPageInfo(info?.position ? paginator.next(info.position) : neighbor('next')),
   canTurn: () => neighbor('next') !== null,
   turn: () => turner.turn('next'),
   highlight: setSpeechHighlight,
@@ -78,6 +78,7 @@ function speechPageInfo(pos) {
   const page = paginator.page(pos);
   if (page.end <= page.start) return null;
   return {
+    position: pos,
     key: `${doc.key}|${pos.seg}:${pos.idx}|${page.start}:${page.end}`,
     text: speechText(doc.book.text, page.start, page.end),
     start: page.start,
